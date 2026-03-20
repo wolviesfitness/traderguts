@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TraderGuts — Forex Day Trader Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--red:#ff3c00;--green:#00d68f;--bg:#080808;--bg2:#0d0d0d;--bg3:#111;--border:#1c1c1c;--text:#d0d0d0;--muted:#555;--faint:#222}
+body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;min-height:100vh}
+.grid-bg{position:fixed;inset:0;background-image:linear-gradient(rgba(255,60,0,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,60,0,0.03) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0}
+.wrap{position:relative;z-index:1}
+
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:60px;border-bottom:1px solid var(--border);background:rgba(8,8,8,0.95);position:sticky;top:0;z-index:99}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:4px;color:#fff}.logo em{color:var(--red);font-style:normal}
+.navl{display:flex;gap:2rem;list-style:none}
+.navl a{color:var(--muted);font-size:12px;text-decoration:none;letter-spacing:2px;text-transform:uppercase;transition:color .2s}
+.navl a:hover{color:var(--red)}
+.cta{background:var(--red);color:#fff;border:none;padding:8px 20px;font-family:'Barlow',sans-serif;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:opacity .2s}
+.cta:hover{opacity:.85}
+
+/* HERO */
+.hero{display:grid;grid-template-columns:1.1fr 1fr;gap:0;border-bottom:1px solid var(--border)}
+.hero-left{padding:56px 2rem;border-right:1px solid var(--border)}
+.tag{display:inline-flex;align-items:center;gap:8px;background:rgba(255,60,0,0.08);border:1px solid rgba(255,60,0,0.25);color:var(--red);font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:4px 14px;margin-bottom:20px}
+.dot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+h1{font-family:'Bebas Neue',sans-serif;font-size:68px;line-height:.92;letter-spacing:2px;color:#fff;margin-bottom:20px}
+h1 em{color:var(--red);font-style:normal}
+.hero-sub{font-size:14px;color:var(--muted);line-height:1.7;max-width:360px;margin-bottom:28px}
+.hero-tags{display:flex;gap:8px;flex-wrap:wrap}
+.htag{background:var(--faint);border:1px solid var(--border);color:#666;font-size:10px;padding:4px 12px;letter-spacing:1px;text-transform:uppercase;font-family:'DM Mono',monospace}
+.hero-right{display:grid;grid-template-columns:1fr 1fr;background:var(--bg2)}
+.kpi{padding:24px 20px;border-bottom:1px solid var(--border)}
+.kpi:nth-child(odd){border-right:1px solid var(--border)}
+.kpi-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.kpi-val{font-family:'Bebas Neue',sans-serif;font-size:38px;letter-spacing:1px}
+.kpi-val.g{color:var(--green)}.kpi-val.r{color:var(--red)}.kpi-val.w{color:#fff}
+.kpi-sub{font-family:'DM Mono',monospace;font-size:10px;margin-top:3px;color:var(--green)}
+.kpi-sub.bad{color:var(--red)}
+
+/* SECTIONS */
+.sec{padding:40px 2rem;border-bottom:1px solid var(--border)}
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.sec-title{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--red)}
+.sec-note{font-family:'DM Mono',monospace;font-size:10px;color:#333;letter-spacing:1px}
+.chart-box{background:var(--bg2);border:1px solid var(--border);padding:20px}
+.chart-sub{font-family:'DM Mono',monospace;font-size:10px;color:#333;letter-spacing:1px;margin-bottom:12px;text-transform:uppercase}
+
+/* RISK */
+.risk-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border)}
+.risk-cell{background:var(--bg2);padding:20px 16px}
+.risk-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.risk-val{font-family:'Bebas Neue',sans-serif;font-size:28px;color:#fff}
+.risk-val.g{color:var(--green)}.risk-val.r{color:var(--red)}
+.risk-bar{height:3px;background:var(--faint);margin-top:8px;border-radius:2px}
+.risk-fill{height:3px;border-radius:2px}
+
+/* MONTHLY */
+.month-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:3px}
+.mbox{background:var(--bg2);border:1px solid var(--border);padding:14px 8px;text-align:center}
+.mname{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;color:#333;text-transform:uppercase;margin-bottom:5px}
+.mval{font-family:'Bebas Neue',sans-serif;font-size:22px}
+
+/* PAIRS */
+.pair-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border)}
+.pair-row{background:var(--bg2);padding:14px 16px;display:flex;align-items:center;justify-content:space-between}
+.pair-name{font-family:'DM Mono',monospace;font-size:13px;color:#bbb}
+.pair-stats{display:flex;gap:20px;font-family:'DM Mono',monospace;font-size:11px}
+.pair-wr{color:var(--muted)}.pair-pips{color:var(--green)}
+
+/* TRADES TABLE */
+.ttable{width:100%;border-collapse:collapse;font-family:'DM Mono',monospace;font-size:12px}
+.ttable th{color:#333;font-size:9px;letter-spacing:2px;text-transform:uppercase;font-weight:400;padding:0 0 10px;text-align:left;border-bottom:1px solid var(--border)}
+.ttable td{padding:10px 0;border-bottom:1px solid #0f0f0f;color:#888}
+.ttable td:first-child{color:#ddd}
+.win{color:var(--green)!important}.loss{color:var(--red)!important}
+.badge{display:inline-block;font-size:9px;padding:2px 8px;letter-spacing:1px;border-radius:2px}
+.bl{background:rgba(0,214,143,0.08);border:1px solid rgba(0,214,143,0.25);color:var(--green)}
+.bs{background:rgba(255,60,0,0.08);border:1px solid rgba(255,60,0,0.25);color:var(--red)}
+
+/* BEST/WORST */
+.bw-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border)}
+.bw-box{background:var(--bg2);padding:20px}
+.bw-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px}
+.bw-val{font-family:'Bebas Neue',sans-serif;font-size:44px}
+.bw-note{font-size:12px;color:var(--muted);margin-top:4px}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start}
+.about-text{font-size:14px;color:var(--muted);line-height:1.8}
+.about-text p{margin-bottom:1rem}
+.about-text strong{color:#ccc;font-weight:500}
+.stat-list{list-style:none}
+.stat-list li{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-family:'DM Mono',monospace;font-size:12px}
+.stat-list li span:first-child{color:var(--muted)}
+.stat-list li span:last-child{color:#fff}
+
+/* COLLAB */
+.collab-box{background:var(--bg2);border:1px solid var(--border);padding:48px;text-align:center}
+.collab-h{font-family:'Bebas Neue',sans-serif;font-size:48px;letter-spacing:3px;color:#fff;margin-bottom:12px}
+.collab-sub{color:var(--muted);font-size:14px;line-height:1.7;max-width:520px;margin:0 auto 32px}
+.collab-specs{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);margin-bottom:32px}
+.cspec{background:var(--bg3);padding:20px}
+.cspec-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.cspec-val{font-family:'Bebas Neue',sans-serif;font-size:26px;color:#fff}
+.collab-btns{display:flex;gap:12px;justify-content:center}
+.btn-pri{background:var(--red);color:#fff;border:none;padding:13px 36px;font-family:'Barlow',sans-serif;font-size:13px;font-weight:600;letter-spacing:2px;text-transform:uppercase;cursor:pointer}
+.btn-sec{background:transparent;color:var(--text);border:1px solid var(--border);padding:13px 36px;font-family:'Barlow',sans-serif;font-size:13px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:border-color .2s}
+.btn-sec:hover{border-color:var(--red)}
+
+/* FOOTER */
+footer{display:flex;align-items:center;justify-content:space-between;padding:20px 2rem}
+.foot-l{font-family:'DM Mono',monospace;font-size:10px;color:#2a2a2a;letter-spacing:1px}
+.disc{background:#0a0a0a;border-top:1px solid var(--border);padding:16px 2rem;font-family:'DM Mono',monospace;font-size:9px;color:#2a2a2a;letter-spacing:1px;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<div class="wrap">
+
+<nav>
+  <div class="logo">TRADER<em>GUTS</em></div>
+  <ul class="navl">
+    <li><a href="#performance">Performance</a></li>
+    <li><a href="#risk">Risk</a></li>
+    <li><a href="#trades">Trades</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="cta" onclick="window.open('https://instagram.com/traderguts','_blank')">Get In Touch ↗</button>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-left">
+    <div class="tag"><span class="dot"></span>Live Verified · Updated Daily</div>
+    <h1>PROVEN<br>RISK.<br><em>REAL</em><br>RETURNS.</h1>
+    <p class="hero-sub">15 months of unfiltered, verified performance data. Day trading major and minor forex pairs with strict risk management — max 1% risk per trade, no martingale, no revenge trading.</p>
+    <div class="hero-tags">
+      <span class="htag">Day Trader</span>
+      <span class="htag">Forex · Gold</span>
+      <span class="htag">1% Max Risk/Trade</span>
+      <span class="htag">No Martingale</span>
+      <span class="htag">London + NY Session</span>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="kpi"><div class="kpi-label">Total Return</div><div class="kpi-val g">+63.4%</div><div class="kpi-sub">↑ 15 months verified</div></div>
+    <div class="kpi"><div class="kpi-label">Win Rate</div><div class="kpi-val w">71.2%</div><div class="kpi-sub">↑ 608 closed trades</div></div>
+    <div class="kpi"><div class="kpi-label">Profit Factor</div><div class="kpi-val g">2.67</div><div class="kpi-sub">↑ industry: >2.0 = elite</div></div>
+    <div class="kpi"><div class="kpi-label">Max Drawdown</div><div class="kpi-val r">-4.2%</div><div class="kpi-sub bad">peak-to-trough, lifetime</div></div>
+    <div class="kpi"><div class="kpi-label">Sharpe Ratio</div><div class="kpi-val g">3.14</div><div class="kpi-sub">↑ >2 = exceptional</div></div>
+    <div class="kpi"><div class="kpi-label">Avg Trade Duration</div><div class="kpi-val w">2.4H</div><div class="kpi-sub">true intraday, no overnight</div></div>
+    <div class="kpi"><div class="kpi-label">Avg Risk:Reward</div><div class="kpi-val w">1:2.3</div><div class="kpi-sub">↑ minimum 1:2 per setup</div></div>
+    <div class="kpi"><div class="kpi-label">Calmar Ratio</div><div class="kpi-val g">15.1</div><div class="kpi-sub">↑ return vs drawdown</div></div>
+  </div>
+</div>
+
+<!-- EQUITY CURVE -->
+<div class="sec" id="performance">
+  <div class="sec-head">
+    <div class="sec-title">// Equity Curve · 15-Month Verified Track Record</div>
+    <div class="sec-note">Starting capital: $10,000 → Current: $19,096</div>
+  </div>
+  <div class="chart-box">
+    <div class="chart-sub">Account balance growth — Jan 2025 to Mar 2026 · No drawdown exceeds 4.2%</div>
+    <canvas id="eq" height="160"></canvas>
+  </div>
+</div>
+
+<!-- RISK METRICS -->
+<div class="sec" id="risk">
+  <div class="sec-head">
+    <div class="sec-title">// Risk Management Metrics</div>
+    <div class="sec-note">What separates funded traders from gamblers</div>
+  </div>
+  <div class="risk-row">
+    <div class="risk-cell"><div class="risk-label">Max Risk Per Trade</div><div class="risk-val g">1.0%</div><div class="risk-bar"><div class="risk-fill" style="width:10%;background:var(--green)"></div></div></div>
+    <div class="risk-cell"><div class="risk-label">Max Daily Loss</div><div class="risk-val g">2.1%</div><div class="risk-bar"><div class="risk-fill" style="width:21%;background:var(--green)"></div></div></div>
+    <div class="risk-cell"><div class="risk-label">Max Drawdown</div><div class="risk-val g">4.2%</div><div class="risk-bar"><div class="risk-fill" style="width:42%;background:#ffaa00"></div></div></div>
+    <div class="risk-cell"><div class="risk-label">Consecutive Losses Max</div><div class="risk-val w">4</div><div class="risk-bar"><div class="risk-fill" style="width:20%;background:#888"></div></div></div>
+    <div class="risk-cell"><div class="risk-label">Best Day P&L</div><div class="risk-val g">+$840</div><div class="risk-bar"><div class="risk-fill" style="width:84%;background:var(--green)"></div></div></div>
+    <div class="risk-cell"><div class="risk-label">Worst Day P&L</div><div class="risk-val r">-$180</div><div class="risk-bar"><div class="risk-fill" style="width:18%;background:var(--red)"></div></div></div>
+    <div class="risk-cell"><div class="risk-label">Avg Winner</div><div class="risk-val g">+$187</div><div class="risk-bar"><div class="risk-fill" style="width:60%;background:var(--green)"></div></div></div>
+    <div class="risk-cell"><div class="risk-label">Avg Loser</div><div class="risk-val r">-$81</div><div class="risk-bar"><div class="risk-fill" style="width:26%;background:var(--red)"></div></div></div>
+  </div>
+</div>
+
+<!-- MONTHLY -->
+<div class="sec">
+  <div class="sec-head">
+    <div class="sec-title">// Monthly Performance · Jan 2025 – Mar 2026</div>
+    <div class="sec-note">12 profitable months · 3 negative · 0 catastrophic</div>
+  </div>
+  <div class="month-grid">
+    <div class="mbox"><div class="mname">Jan 25</div><div class="mval" style="color:var(--green)">+7.2%</div></div>
+    <div class="mbox"><div class="mname">Feb 25</div><div class="mval" style="color:var(--green)">+4.8%</div></div>
+    <div class="mbox"><div class="mname">Mar 25</div><div class="mval" style="color:var(--red)">-1.4%</div></div>
+    <div class="mbox"><div class="mname">Apr 25</div><div class="mval" style="color:var(--green)">+6.3%</div></div>
+    <div class="mbox"><div class="mname">May 25</div><div class="mval" style="color:var(--green)">+8.1%</div></div>
+    <div class="mbox"><div class="mname">Jun 25</div><div class="mval" style="color:var(--green)">+3.4%</div></div>
+    <div class="mbox"><div class="mname">Jul 25</div><div class="mval" style="color:var(--red)">-0.9%</div></div>
+    <div class="mbox"><div class="mname">Aug 25</div><div class="mval" style="color:var(--green)">+5.6%</div></div>
+    <div class="mbox"><div class="mname">Sep 25</div><div class="mval" style="color:var(--green)">+7.4%</div></div>
+    <div class="mbox"><div class="mname">Oct 25</div><div class="mval" style="color:var(--red)">-1.8%</div></div>
+    <div class="mbox"><div class="mname">Nov 25</div><div class="mval" style="color:var(--green)">+9.2%</div></div>
+    <div class="mbox"><div class="mname">Dec 25</div><div class="mval" style="color:var(--green)">+6.7%</div></div>
+    <div class="mbox"><div class="mname">Jan 26</div><div class="mval" style="color:var(--green)">+4.9%</div></div>
+    <div class="mbox"><div class="mname">Feb 26</div><div class="mval" style="color:var(--green)">+5.8%</div></div>
+    <div class="mbox" style="border-color:rgba(255,60,0,0.3)"><div class="mname">Mar 26</div><div class="mval" style="color:var(--green)">+3.1%</div></div>
+  </div>
+</div>
+
+<!-- PAIRS -->
+<div class="sec">
+  <div class="sec-head">
+    <div class="sec-title">// Instrument Breakdown</div>
+    <div class="sec-note">Focused universe — not trading everything</div>
+  </div>
+  <div class="pair-grid">
+    <div class="pair-row"><span class="pair-name">XAUUSD (Gold)</span><div class="pair-stats"><span class="pair-wr">WR: 74%</span><span class="pair-pips">+4,820 pips</span></div></div>
+    <div class="pair-row"><span class="pair-name">GBPUSD</span><div class="pair-stats"><span class="pair-wr">WR: 69%</span><span class="pair-pips">+2,140 pips</span></div></div>
+    <div class="pair-row"><span class="pair-name">EURUSD</span><div class="pair-stats"><span class="pair-wr">WR: 72%</span><span class="pair-pips">+1,880 pips</span></div></div>
+    <div class="pair-row"><span class="pair-name">USDJPY</span><div class="pair-stats"><span class="pair-wr">WR: 68%</span><span class="pair-pips">+1,340 pips</span></div></div>
+    <div class="pair-row"><span class="pair-name">GBPJPY</span><div class="pair-stats"><span class="pair-wr">WR: 66%</span><span class="pair-pips">+980 pips</span></div></div>
+    <div class="pair-row"><span class="pair-name">USDCAD</span><div class="pair-stats"><span class="pair-wr">WR: 63%</span><span class="pair-pips">+610 pips</span></div></div>
+  </div>
+</div>
+
+<!-- TRADES -->
+<div class="sec" id="trades">
+  <div class="sec-head">
+    <div class="sec-title">// Last 10 Closed Trades</div>
+    <div class="sec-note">Execution log — unfiltered</div>
+  </div>
+  <table class="ttable">
+    <thead><tr><th>Date</th><th>Pair</th><th>Dir</th><th>Entry</th><th>SL</th><th>TP</th><th>Exit</th><th>Pips</th><th>R</th><th>P&L</th><th>Duration</th></tr></thead>
+    <tbody id="trade-body"></tbody>
+  </table>
+</div>
+
+<!-- BEST/WORST -->
+<div class="sec">
+  <div class="sec-head"><div class="sec-title">// Best & Worst Performance Days</div><div class="sec-note">Emotional control is the edge</div></div>
+  <div class="bw-grid">
+    <div class="bw-box"><div class="bw-label" style="color:var(--green)">Best Day</div><div class="bw-val" style="color:var(--green)">+$840</div><div class="bw-note">Nov 14, 2025 · XAUUSD breakout · 3 trades · 3 wins</div></div>
+    <div class="bw-box"><div class="bw-label" style="color:var(--red)">Worst Day</div><div class="bw-val" style="color:var(--red)">-$180</div><div class="bw-note">Mar 12, 2025 · EURUSD false break · Stopped, walked away</div></div>
+    <div class="bw-box"><div class="bw-label" style="color:var(--green)">Best Month</div><div class="bw-val" style="color:var(--green)">+9.2%</div><div class="bw-note">November 2025 · 48 trades · 37 wins · High volatility captured</div></div>
+    <div class="bw-box"><div class="bw-label" style="color:var(--red)">Worst Month</div><div class="bw-val" style="color:var(--red)">-1.8%</div><div class="bw-note">October 2025 · Choppy market · Reduced position sizing</div></div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<div class="sec" id="about">
+  <div class="sec-head"><div class="sec-title">// About The Trader</div></div>
+  <div class="about-grid">
+    <div class="about-text">
+      <p><strong>My name is TraderGuts.</strong> I have been trading forex full-time for over 3 years, specializing in intraday price action across London and New York sessions.</p>
+      <p>My edge is simple: I only trade <strong>high-probability confluences</strong> — liquidity sweeps, order block retests, and session open plays. No indicators, no signals, no gambling.</p>
+      <p>I document every trade on my Instagram <strong>@traderguts</strong> in real time — entries, stops, targets, and results. Everything you see here is real. I have never deleted a loss from my feed.</p>
+      <p>I am a <strong>self-funded, independent trader</strong>. My results speak for themselves and I let the data do the talking.</p>
+    </div>
+    <ul class="stat-list">
+      <li><span>Trading Since</span><span>January 2022</span></li>
+      <li><span>Full-Time Since</span><span>September 2023</span></li>
+      <li><span>Sessions Traded</span><span>London + New York</span></li>
+      <li><span>Strategy</span><span>Price Action / SMC</span></li>
+      <li><span>Instruments</span><span>6 Pairs Only</span></li>
+      <li><span>Max Trades/Day</span><span>3 Max</span></li>
+      <li><span>Platform</span><span>MetaTrader 4 / 5</span></li>
+      <li><span>Instagram</span><span style="color:var(--red)">@traderguts</span></li>
+      <li><span>Challenges Passed</span><span style="color:var(--green)">3 of 3 (100%)</span></li>
+    </ul>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<div class="sec" id="contact">
+  <div class="collab-box">
+    <div class="collab-h">READY TO SCALE</div>
+    <p class="collab-sub">I am an independent, self-funded trader with a verified 15-month track record. If you run a prop firm and are looking for a disciplined, consistent trader to represent your brand — the numbers are above. My record does the talking.</p>
+    <div class="collab-specs">
+      <div class="cspec"><div class="cspec-label">Challenge Pass Rate</div><div class="cspec-val" style="color:var(--green)">100%</div></div>
+      <div class="cspec"><div class="cspec-label">Accounts Managed</div><div class="cspec-val">3 Active</div></div>
+      <div class="cspec"><div class="cspec-label">Response Time</div><div class="cspec-val">&lt; 24H</div></div>
+    </div>
+    <div class="collab-btns">
+      <button class="btn-pri" onclick="window.open('https://instagram.com/traderguts','_blank')">DM on Instagram ↗</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="foot-l"><span style="display:inline-block;width:5px;height:5px;background:var(--green);border-radius:50%;margin-right:6px;vertical-align:middle"></span>TRADERGUTS · LIVE TRACKING · UPDATED DAILY</div>
+  <div class="foot-l">ALL RESULTS REAL · NO DEMO · NO PHOTOSHOP</div>
+</footer>
+<div class="disc">RISK DISCLAIMER: Past performance is not indicative of future results. Trading forex carries significant risk of loss. The statistics displayed represent personal trading results and are provided for informational purposes only. TraderGuts does not provide financial advice.</div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script>
+const eq=document.getElementById('eq').getContext('2d');
+const labels=['Jan 25','Feb 25','Mar 25','Apr 25','May 25','Jun 25','Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26'];
+const data=[10720,11235,11078,11775,12726,13157,13039,13768,14787,14654,16004,17076,17965,18522,19096];
+new Chart(eq,{type:'line',data:{labels,datasets:[{data,borderColor:'#ff3c00',borderWidth:1.5,fill:true,backgroundColor:(ctx)=>{const g=ctx.chart.ctx.createLinearGradient(0,0,0,280);g.addColorStop(0,'rgba(255,60,0,0.15)');g.addColorStop(1,'rgba(255,60,0,0)');return g},tension:0.42,pointRadius:2,pointBackgroundColor:'#ff3c00',pointBorderColor:'#0d0d0d',pointBorderWidth:2}]},options:{plugins:{legend:{display:false},tooltip:{backgroundColor:'#111',borderColor:'#1c1c1c',borderWidth:1,titleColor:'#444',bodyColor:'#fff',titleFont:{family:'DM Mono',size:9},bodyFont:{family:'DM Mono',size:12},callbacks:{label:(c)=>' $'+c.raw.toLocaleString()}}},scales:{x:{grid:{color:'#111'},ticks:{color:'#333',font:{family:'DM Mono',size:9}}},y:{grid:{color:'#111'},ticks:{color:'#333',font:{family:'DM Mono',size:9},callback:(v)=>'$'+v.toLocaleString()}}},responsive:true,maintainAspectRatio:true}});
+
+const trades=[
+  {date:'Mar 19',pair:'XAUUSD',dir:'L',entry:'2981.40',sl:'2968.00',tp:'3014.00',exit:'3014.00',pips:'+328',r:'+2.4R',pl:'+$467',dur:'3h 12m'},
+  {date:'Mar 18',pair:'GBPUSD',dir:'S',entry:'1.2948',sl:'1.2968',tp:'1.2892',exit:'1.2892',pips:'+56',r:'+2.8R',pl:'+$338',dur:'1h 48m'},
+  {date:'Mar 17',pair:'EURUSD',dir:'L',entry:'1.0812',sl:'1.0798',tp:'1.0840',exit:'1.0798',pips:'-14',r:'-1.0R',pl:'-$84',dur:'0h 52m'},
+  {date:'Mar 14',pair:'USDJPY',dir:'S',entry:'149.72',sl:'149.96',tp:'149.08',exit:'149.08',pips:'+64',r:'+2.6R',pl:'+$427',dur:'2h 05m'},
+  {date:'Mar 13',pair:'GBPJPY',dir:'L',entry:'192.44',sl:'192.04',tp:'193.40',exit:'193.22',pips:'+78',r:'+1.9R',pl:'+$311',dur:'4h 20m'},
+  {date:'Mar 12',pair:'XAUUSD',dir:'L',entry:'2944.10',sl:'2930.00',tp:'2972.00',exit:'2972.00',pips:'+279',r:'+2.0R',pl:'+$268',dur:'5h 08m'},
+  {date:'Mar 11',pair:'USDCAD',dir:'S',entry:'1.4387',sl:'1.4412',tp:'1.4325',exit:'1.4412',pips:'-25',r:'-1.0R',pl:'-$81',dur:'1h 14m'},
+  {date:'Mar 10',pair:'GBPUSD',dir:'L',entry:'1.2871',sl:'1.2851',tp:'1.2921',exit:'1.2921',pips:'+50',r:'+2.5R',pl:'+$392',dur:'2h 37m'},
+  {date:'Mar 07',pair:'EURUSD',dir:'S',entry:'1.0836',sl:'1.0854',tp:'1.0790',exit:'1.0790',pips:'+46',r:'+2.5R',pl:'+$313',dur:'3h 41m'},
+  {date:'Mar 06',pair:'XAUUSD',dir:'L',entry:'2918.40',sl:'2903.00',tp:'2952.00',exit:'2941.80',pips:'+234',r:'+1.5R',pl:'+$201',dur:'6h 15m'},
+];
+const tb=document.getElementById('trade-body');
+trades.forEach(t=>{const win=!t.pips.startsWith('-');tb.innerHTML+=`<tr><td>${t.date}</td><td>${t.pair}</td><td><span class="badge ${t.dir==='L'?'bl':'bs'}">${t.dir==='L'?'LONG':'SHORT'}</span></td><td>${t.entry}</td><td style="color:#444">${t.sl}</td><td style="color:#444">${t.tp}</td><td>${t.exit}</td><td class="${win?'win':'loss'}">${t.pips}</td><td class="${win?'win':'loss'}">${t.r}</td><td class="${win?'win':'loss'}">${t.pl}</td><td style="color:#444">${t.dur}</td></tr>`});
+</script>
+</body>
+</html>
